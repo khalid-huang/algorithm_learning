@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
+
 using namespace std;
 
 //stirng
@@ -27,6 +29,22 @@ void print_vec(vector<char> v)
 		cout << v[i] << endl;
 	}
 }
+
+//vector
+//sort
+//
+bool cmp(const int first, const int second)
+{
+	return first < second;
+}
+void test() {
+	std::vector<int> v_int;
+	v_int.push_back(1);
+	v_int.push_back(4);
+	v_int.push_back(2);
+	sort(v_int.begin(), v_int.end(), cmp);
+}
+
 
 int main()
 {
