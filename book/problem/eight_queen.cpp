@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 
+//八皇后问题的解法是使用回溯来减少递归次数
 void queen_solve(int num, int cur, int& rsl, int* C)
 {
 	cout << cur << "  " << num << endl;
@@ -10,7 +11,7 @@ void queen_solve(int num, int cur, int& rsl, int* C)
 	} else {
 		for(int i = 0; i < num; i++)
 		{
-			C[cur] = i;
+			C[cur] = i;//在第cur行的第j
 			int ok = 1;
 			for(int j = 0; j < cur; j++)
 			{
