@@ -8,8 +8,8 @@ struct Room{
   double F;
   double rate;
   Room(double j, double f, double r) {
-    J = j;
-    F = f;
+    this.J = j;
+    this.F = f;
     rate = r;
   }
   Room() {}

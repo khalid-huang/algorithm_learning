@@ -1,5 +1,2 @@
-#include <stdio.h>
-int main() {
-  double a = 3.1345;
-  printf("%.3f\n", a);
-}
+结语
+如上就是使用IDEA2017.1整合SSH的整体教程了，个人新手，正积极学习ing。如果上述有任何问题，可以联系我。
