@@ -1,5 +1,6 @@
 //思路是用试减法；比如7234 / 23的话，先因为它们相差两位，所以呢23 * 100为基位，看看可以减去几个这样的基位，方法是从9到1去试，这样可以得到商和余数；
 //需要实现高精度的减法,乘法；
+
 #include <iostream>
 
 using namespace std;
@@ -62,17 +63,33 @@ string mul(string v1, string v2) {
   return rsl;
 }
 
-//高精度减法，但是v1一定会大于v2，而且它们的位数是一样的
+//高精度减法，但是v1一定会大于v2
 string substract(string v1, string v2) {
-  size_t size = v1.size();
+  size_t size1 = v1.size();
+  size_t size2 = v2.size();
   string rsl;
   int temp;
   int carry = 0;
-  for(int i = size - 1; i >= 0; i--) {
-    temp = char2int(v1[i]) - char2int(v2[i]) - carry;
+  //逐位减
+  for(int i = 1; i <= size2; i++) {
+    temp = char2int(v1[size1 - i]) - char2int(v2[size2 - i]) - carry;
     if(temp < 0) {
       carry = 1;
       temp += 10;
+    } else {
+      carry = 0;
+    }
+    rsl = int2char(temp) + rsl;
+  }
+
+  //剩下的多余位数
+  for(int i = size2 + 1; i <= size1; i++) {
+    temp = char2int(v1[size1 - i]) - carry;
+    if(temp < 0) {
+      carry = 1;
+      temp += 10;
+    } else {
+      carry = 0;
     }
     rsl = int2char(temp) + rsl;
   }
@@ -109,58 +126,76 @@ string divide(string v1, string v2) {
   }
 
   size_t size1, size2;
-  string rsl, base_temp, v2_temp, v1_temp;
-  int rate, diff;
-  int flag = 0;
-  while(cmp(v1, v2) >= 0 ) {
-    if(v1 == v2) {
+  string rsl, base_temp, v2_temp, v1_temp, remain = "0";
+  int rate, diff, len;
+  int flag = 0, flag1 = 0, zeroNum = 0, remain_num = 0;
+  while(v1 != "0") {
+    cout << "v1-v2: " << v1 << " " << v2 << endl;
+    //相等情况，直接给1,结束
+    if(cmp(v1, v2) == 0) {
       rsl = rsl + "1";
       break;
     }
+    //最后一步的补0；已经没有办法再做减法，就直接补0,补0这里要结合remain_num来，它表示在竖式除法里，前面的除法剩下的数字位数；计算的方式是减法的结束减去base_temp里面增加的0的个数；
+    if(cmp(v1, v2) < 0) {
+      len = remain_num+1;
+      size1 = v1.size();
+      for(int i = remain_num + 1; i <= size1; i++) {
+        rsl += "0";
+      }
+      remain = v1;
+      v1 = "0";
+      break;
+    }
 
+    //获取减法的基数
     base_temp = getBase(v1, v2);
+    zeroNum = base_temp.size() - v2.size();
 
     cout << v1 << "-" << v2 << " bt:" << base_temp << endl;
     //试减
     rate = 9;
     v2_temp = mul(base_temp, int2str(rate));
-    cout << "temp" << v2_temp << endl;
-    while(cmp(v2_temp, v1) > 0) {
+    while(cmp(v2_temp, v1) > 0 ) {
       --rate;
       v2_temp = mul(base_temp, int2str(rate));
-      cout << v2 << "-" << v1 << "-" << rate << ": " << v2_temp << endl;
-      flag++;
-      // if(flag == 10) {
-      //   break;
-      // }
+    }
+    cout << v2 << "-" << v1 << "-" << rate << ": " << v2_temp << endl;
+    //过程中商补0; 需要先判断是不是第一位开始;同时因为一开始已经进行v1与v2的判断，可以判断出这里一定是可以成功减法的；
+    cout << "base_temp " << base_temp << endl;
+    if(rsl.size() != 0) {
+      cout << "remainNum " << remain_num << endl;
+      len = remain_num+1;
+      while(len < v1.size() + 1 && cmp(v1.substr(0, len), v2) < 0) {
+        cout << "zero: " << v1.substr(0, len) << "-" << v2 << endl;
+        rsl = rsl + "0";
+        len++;
+      }
     }
 
-    cout << v1 << "-" << v2_temp << endl;
     v1_temp = substract(v1, v2_temp);
+    cout << "subrsl: " << v1 << "-" << v2_temp << "=" << v1_temp << endl;
+    remain_num   = v1_temp.size() - zeroNum;
     diff = v1.size() - v1_temp.size();
-    cout << "size:" << v1.size() << " " << v1_temp.size() << endl;
+    // cout << "size:" << v1.size() << " " << v1_temp.size() << endl;
     cout << diff << endl;
     //写入商
     rsl = rsl + int2char(rate);
-    //补0
-    while(diff != 1) {
-      diff--;
-      rsl = rsl + "0";
-    }
     v1 = v1_temp;
-    cout << ":" << v1 << endl;
-    // if(flag == 10) {
-    //   break;
-    // }
+    cout << "rate:" << rate << endl;
+
   }
   rsl = delPreZero(rsl);
-  return rsl;
+  //综合结果
+  return rsl + "......" + remain;
+  // return rsl;
 }
 
 int main() {
   string v1, v2;
   cin >> v1 >> v2;
   // cout << substract(v1, v2) << endl;
+  // cout << "sub" << endl;
   // cout << getBase(v1, v2) << endl;
   cout << divide(v1, v2) << endl;
 }
