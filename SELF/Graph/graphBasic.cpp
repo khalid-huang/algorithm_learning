@@ -17,6 +17,9 @@ struct LGraph {
   int vexnum, arcnum; //顶点数和弧数
 }
 
+
+//上面其实也不一定要那样，可以直接就用一个
+ArcNode* List[...]
 /*
 输入的格式为
 vertexNum edgeNum
