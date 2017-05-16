@@ -72,6 +72,15 @@ int main() {
   for(int i = 0; i < M; i++) {
     cin >> from >> to;
     from--, to--;
+    // count[from]++;
+    // tmp = new ArcNode;
+    // tmp->to = from;
+    // if(List[to] == NULL) {
+    //   List[to] = tmp;
+    // } else {
+    //   tmp->next = List[to];
+    //   List[to] = tmp;
+    // }
     count[to]++;
     tmp = new ArcNode;
     tmp->to = to;

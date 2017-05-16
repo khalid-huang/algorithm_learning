@@ -39,7 +39,7 @@ bool join(int u, int v) {
   if(fu == fv) {
     return false;
   }
-  //进行连接; 连接的规划是谁的儿子数多，谁老大
+  //进行连接; 连接的规划是谁的儿子数多，谁老大(扁平化了)
   if(son[fu] > son[fv]) {
     father[fv] = fu; //将fu作为fv的父节点
     son[fu] += son[fv]; //更新fu的儿子数
