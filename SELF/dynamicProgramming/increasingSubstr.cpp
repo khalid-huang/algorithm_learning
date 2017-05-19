@@ -5,6 +5,8 @@
 
 using namespace std;
 
+//自己实现的动态规划法，与http://blog.csdn.net/sgbfblog/article/details/7798737 里面的解法二是一样的思路
+//O(N^2)
 void printIncreasingSubstrNotContinue(int *a, int size) {
   int c[size];
   int max, index, temp;
@@ -47,7 +49,7 @@ void printIncreasingSubstrNotContinue(int *a, int size) {
   }
   cout << endl;
 }
-
+//自己实现的
 void printIncreasingSubstrContinue(int a[], int size) {
   int c[size];
   int max, index, temp;
@@ -93,10 +95,50 @@ void printIncreasingSubstrContinue(int a[], int size) {
   cout << endl;
 }
 
+//参考 http://blog.csdn.net/sgbfblog/article/details/7798737
+//O(NlgN),但是只可以得到长度，不能得到对应的序列内容
+//返回在数组a中第一个比w要大的位置
+int binarySearch(int *a, int size, int w) {
+  int left = 0, right = size, middle; //左闭右开的区间
+  while(left < right) {
+    middle = left + (right - left) / 2;
+    if(a[middle] > w) {
+      right = middle;
+    } else if(a[middle] < w) {
+      left = middle + 1;
+    } else {
+      return middle; //找到了就直接返回
+    }
+  }
+  //如果里面没有这个元素的话，我们就返回left的位置，这个就是数组里面第一个比w大的元素的位置
+  return left;
+}
+
+void get_LIS(int *a, int size) {
+  int B[size];
+  int cur = 1, pos;
+  B[cur] = a[0];
+  for(int i = 1; i < size; i++) {
+    if(a[i] > B[cur]) {
+      B[++cur] = a[i];
+    } else {
+      pos = binarySearch(B, cur, a[i]);
+      B[pos] = a[i];
+    }
+  }
+
+  for(int i = 1; i < cur + 1; i++) {
+    cout << "B[" << i << "] = " << B[i] << endl;
+  }
+  cout << "最长递增子序列长度为" << cur+1 << endl;
+}
+
 int main() {
   // int a[] = {1, 7, 8, 3, 4, 5, 6, 6, 4, 3, 7};
-  int a[] = {6, 9, 10, 2, 11, 3, 5, 12, 7, 13};
-  int size = 10;
-  printIncreasingSubstrNotContinue(a, size);
-  printIncreasingSubstrContinue(a, size);
+  // int a[] = {6, 9, 10, 2, 11, 3, 5, 12, 7, 13};
+  int a[] = {2, 1, 6, 3, 5, 4, 8, 7, 9};
+  int size = 9;
+  // printIncreasingSubstrNotContinue(a, size);
+  // printIncreasingSubstrContinue(a, size);
+  get_LIS(a, size);
 }

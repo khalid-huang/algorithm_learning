@@ -1,95 +1,66 @@
-//3d3-2 最长公共子序列问题
-#include <iostream>
-using namespace std;
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-const int M = 6;
-const int N = 5;
+#define N 9 //数组元素个数
+// int array[N] = {2, 1, 6, 3, 5, 4, 8, 7, 9}; //原数组
+int array[N] = {2,1,5,3,6,4,8,9,7};
+int B[N]; //在动态规划中使用的数组,用于记录中间结果,其含义三言两语说不清,请参见博文的解释
+int len; //用于标示B数组中的元素个数
 
-void output(char *s,int n);
-void LCSLength(int m,int n,char *x,char *y,int **c);
-void LCS(int i,int j,char *x,int **c);
+int LIS(int *array, int n); //计算最长递增子序列的长度,计算B数组的元素,array[]循环完一遍后,B的长度len即为所求
+int BiSearch(int *b, int len, int w); //做了修改的二分搜索算法
 
 int main()
 {
-    //X={A,B,C,B,D,A,B}
-    //Y={B,D,C,A,B,A}
-    char x[] = {' ','b','c','c','d','e','f'};
-    char y[] = {' ','b','c','d','e','f'};
+    printf("LIS: %d\n", LIS(array, N));
 
-    int **c = new int *[M+1];
-    for(int i=0;i<=M;i++)
+    int i;
+    for(i=0; i<len; ++i)
     {
-        c[i] = new int[N+1];
+        printf("B[%d]=%d\n", i, B[i]);
     }
 
-    cout<<"序列X："<<endl;
-    output(x,M);
-    cout<<"序列Y："<<endl;
-    output(y,N);
-
-    LCSLength(M,N,x,y,c);
-
-    cout<<"序列X、Y最长公共子序列长度为："<<c[M][N]<<endl;
-    cout<<"序列X、Y最长公共子序列为："<<endl;
-    LCS(M,N,x,c);
-    cout<<endl;
+    return 0;
 }
 
-void output(char *s,int n)
+int LIS(int *array, int n)
 {
-    for(int i=1; i<=n; i++)
+    len = 1;
+    B[0] = array[0];
+    int i, pos = 0;
+
+    for(i=1; i<n; ++i)
     {
-        cout<<s[i]<<" ";
-    }
-    cout<<endl;
-}
-
-void LCSLength(int m,int n,char *x,char *y,int **c)
-{
-    int i,j;
-
-    for(i=1; i<=m; i++)
-        c[i][0] = 0;
-    for(i=1; i<=n; i++)
-        c[0][i] = 0;
-
-    for(i=1; i<=m; i++)
-    {
-        for(j=1; j<=n; j++)
+        if(array[i] > B[len-1]) //如果大于B中最大的元素，则直接插入到B数组末尾
         {
-            if(x[i]==y[j])
-            {
-                c[i][j]=c[i-1][j-1]+1;
-            }
-            else if(c[i-1][j]>=c[i][j-1])
-            {
-                c[i][j]=c[i-1][j];
-            }
-            else
-            {
-                 c[i][j]=c[i][j-1];
-            }
+            B[len] = array[i];
+            ++len;
+        }
+        else
+        {
+            pos = BiSearch(B, len, array[i]); //二分查找需要插入的位置
+            B[pos] = array[i];
         }
     }
+
+    return len;
 }
 
-void LCS(int i,int j,char *x,int **c)
+//修改的二分查找算法，返回数组元素需要插入的位置。
+int BiSearch(int *b, int len, int w)
 {
-    if(i==0 || j==0)
+    int left = 0, right = len - 1;
+    int mid;
+    while (left <= right)
     {
-        return;
+        mid = left + (right-left)/2;
+        if (b[mid] > w)
+            right = mid - 1;
+        else if (b[mid] < w)
+            left = mid + 1;
+        else    //找到了该元素，则直接返回
+            return mid;
     }
-    if(c[i][j]==c[i-1][j-1]+1)
-    {
-        LCS(i-1,j-1,x,c);
-        cout<<x[i]<<" ";
-    }
-    else if(c[i-1][j]>=c[i][j-1])
-    {
-        LCS(i-1,j,x,c);
-    }
-    else
-    {
-        LCS(i,j-1,x,c);
-    }
+    return left;//数组b中不存在该元素，则返回该元素应该插入的位置
 }
