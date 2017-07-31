@@ -14,7 +14,10 @@ void print(std::vector<std::vector<int> > v) {
 
 
 int main() {
-  int a = -2147483647;
-  int b = -a;
-  cout << -a << endl;
+  int a = 3;
+  int b = 5;
+  a = a ^ b;
+  b = a ^ b;
+  a = a ^ b;
+  cout << a << " " << b << endl;
 }

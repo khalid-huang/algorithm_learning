@@ -1,5 +1,5 @@
 //经典
-79
+79,33,88
 
 void print(std::vector<std::vector<int> > rsl) {
   int size_o = rsl.size(), size_i;
@@ -11,3 +11,6 @@ void print(std::vector<std::vector<int> > rsl) {
     cout << endl;
   }
 }
+
+
+//补充二分的
