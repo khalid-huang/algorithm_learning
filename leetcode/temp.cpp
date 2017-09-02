@@ -14,10 +14,7 @@ void print(std::vector<std::vector<int> > v) {
 
 
 int main() {
-  int a = 3;
-  int b = 5;
-  a = a ^ b;
-  b = a ^ b;
-  a = a ^ b;
-  cout << a << " " << b << endl;
+  int* a = NULL;
+  int* b = NULL;
+  cout << (a == b) << endl;
 }
