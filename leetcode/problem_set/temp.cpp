@@ -42,5 +42,11 @@ int main() {
   nums.push_back(7);
   nums.push_back(101);
   nums.push_back(6);
-  cout << lengthOfLIS(nums) << endl;
+//   cout << lengthOfLIS(nums) << endl;
+
+    vector<int> nums1 = nums;
+    vector<int> nums2 = nums;
+    nums1[0] = 3;
+    cout << nums1[0] << " " << nums[0] << " " << nums2[0] << endl;
+
 }
