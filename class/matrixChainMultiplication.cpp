@@ -58,14 +58,14 @@ vector<int> generateA(vector<vector<int> >& testData) {
 }
 
 void print(vector<vector<int> > s) {
-    int size = s.size();
-    for(int i = 0; i < size; i++) {
-        int size_o = s[i].size();
-        for(int j =0; j < size_o; j++) {
-            cout << s[i][j] << " ";
-        }
-        cout << endl;
-    }
+    // int size = s.size();
+    // for(int i = 0; i < size; i++) {
+    //     int size_o = s[i].size();
+    //     for(int j =0; j < size_o; j++) {
+    //         cout << s[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
 }
 
 void print1(vector<int> tmp) {
