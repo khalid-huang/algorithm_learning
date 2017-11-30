@@ -3,6 +3,8 @@
 
 using namespace std;
 
+int d[101][2]; //用于缓存括号的情况
+
 void generteData(vector<vector<int> >& testData) {
     //测试数据
     vector<int> A1;
@@ -49,7 +51,6 @@ int lookupChain(vector<vector<int> >& m, vector<vector<int> >& s, vector<int>& A
 vector<int> generateA(vector<vector<int> >& testData) {
     int size = testData.size();
     vector<int> A(size+1);
-    cout << testData[0][0] << endl;
     A[0] = testData[0][0];
     for(int i = 1; i < size + 1; i++) {
         A[i] = testData[i-1][1];
@@ -57,7 +58,25 @@ vector<int> generateA(vector<vector<int> >& testData) {
     return A;
 }
 
-void print(vector<vector<int> > s) {
+//求出n到m的最佳分解方案的括号数量及位置
+void bracket(vector<vector<int> >& s, int n, int m) { 
+    if(m - n <= 1) return;
+    // ++d[n][0];
+    int i = s[n][m];
+    if(i - n > 0) {
+        ++d[n][0];
+        ++d[i+1][1];
+    }
+    if(m-i-1 > 0) {
+        ++d[i+1][0];
+        ++d[m+1][1];
+    }
+    bracket(s, n, i);
+    bracket(s, i+1, m);
+    // ++d[m][1];
+}
+
+void print(vector<vector<int> >& s, int size) {
     // int size = s.size();
     // for(int i = 0; i < size; i++) {
     //     int size_o = s[i].size();
@@ -66,13 +85,33 @@ void print(vector<vector<int> > s) {
     //     }
     //     cout << endl;
     // }
+    bracket(s, 1, size);
+    for(int i = 1; i <= size+1; i++) {
+        //))((，所以要先打右边的
+        for(int j = 0;j < d[i][1]; ++j) {
+            cout << ")";
+        }
+        if(i > 1 && i < size + 1) {
+            cout << "*";
+        }
+        for(int j = 0; j < d[i][0]; ++j) {
+            cout << "(";
+        }
+        if(i < size + 1) {
+            cout << "A" << i;
+        }
+    }
+    cout << endl;
 }
 
 void print1(vector<int> tmp) {
     int size = tmp.size();
-    for(int i = 0; i < size; i++) {
-        cout << tmp[i] << " ";
+    cout << "矩阵的情况"<< endl;
+    cout << tmp[0] << "*";
+    for(int i = 1; i < size - 1; i++) {
+        cout << tmp[i] << ", " << tmp[i] << "*";
     }
+    cout << tmp[size-1] << endl;
     cout << endl;
 }
 
@@ -90,9 +129,12 @@ int matrixChain(vector<vector<int> >& testData) {
     int first = 1, last = size;
     lookupChain(m, s, A, first, last);
 
-    print(s);//打印括号顺序
+    print(s,size);//打印括号顺序
+
     return m[1][size];//返回结果
 }
+
+//括号打印 http://blog.csdn.net/sixtyfour/article/details/12250415
 
 int main() {
 
