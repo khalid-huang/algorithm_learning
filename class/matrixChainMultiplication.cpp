@@ -58,10 +58,9 @@ vector<int> generateA(vector<vector<int> >& testData) {
     return A;
 }
 
-//求出n到m的最佳分解方案的括号数量及位置
+//求出n到m的最佳分解方案的括号数量及位置;比如四个矩阵的话，会有5个位置可以放括号，每个矩阵左右两边各一个，同时中间的都是算了两次
 void bracket(vector<vector<int> >& s, int n, int m) { 
     if(m - n <= 1) return;
-    // ++d[n][0];
     int i = s[n][m];
     if(i - n > 0) {
         ++d[n][0];
@@ -73,19 +72,12 @@ void bracket(vector<vector<int> >& s, int n, int m) {
     }
     bracket(s, n, i);
     bracket(s, i+1, m);
-    // ++d[m][1];
 }
 
 void print(vector<vector<int> >& s, int size) {
-    // int size = s.size();
-    // for(int i = 0; i < size; i++) {
-    //     int size_o = s[i].size();
-    //     for(int j =0; j < size_o; j++) {
-    //         cout << s[i][j] << " ";
-    //     }
-    //     cout << endl;
-    // }
+
     bracket(s, 1, size);
+    cout << "最优解的括号顺序" << endl;
     for(int i = 1; i <= size+1; i++) {
         //))((，所以要先打右边的
         for(int j = 0;j < d[i][1]; ++j) {
@@ -101,12 +93,12 @@ void print(vector<vector<int> >& s, int size) {
             cout << "A" << i;
         }
     }
-    cout << endl;
+    cout << endl << endl ;
 }
 
 void print1(vector<int> tmp) {
     int size = tmp.size();
-    cout << "矩阵的情况"<< endl;
+    cout << "测试矩阵的情况"<< endl;
     cout << tmp[0] << "*";
     for(int i = 1; i < size - 1; i++) {
         cout << tmp[i] << ", " << tmp[i] << "*";
@@ -140,6 +132,7 @@ int main() {
 
     vector<vector<int> > testData;
     generteData(testData);
-    cout << matrixChain(testData) << endl;
+    int rsl = matrixChain(testData);
+    cout << "最优解是：" << rsl << endl;
     
 }
