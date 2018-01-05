@@ -139,12 +139,16 @@ vector<int> generateTwoRowsEnableChange(vector<vector<int> >& pairs) {
             swap(row1, row2);
             //如果冲突数比之前大的话，直接还原
             int newCount = countOfConflict();
-            if(originalCount < newCount) {
+            swap(row1, row2);
+            if(originalCount <= newCount) {
                 pair.clear();
             } else {
                 pair.push_back(newCount);
+                break;
             }
-            swap(row1, row2);
+        }
+        if(pair.size() != 0) {
+            break;
         }
     }
     return pair;
@@ -159,7 +163,12 @@ void generateTwoRowsEnableChangePairs(vector<vector<int> >& pairs) {
         if(pair.size() == 0) {
             break;
         } else {
-            pairs.push_back(pair);
+            if(pair[2] == 0) { //冲突数为0的情况 
+                pairs.clear();
+                pairs.push_back(pair);
+            } else {
+                pairs.push_back(pair);
+            }
         }
     }
 }
@@ -172,11 +181,13 @@ int selectRandomFromPairs(vector<vector<int> >& pairs) {
     }
     //产生一个从[1,total]的数字
     int result = -1;
+    // cout << "look" << total << endl;
     int random = (rand() % total) + 1;
     for(int i = 0; i < size; i++) {
-        random -= pairs[2];
+        random -= pairs[i][2];
         if(random <= 0) {
             result = i;
+            break;
         }
     }
     return result;
@@ -233,6 +244,8 @@ bool changeTwoQueen_o() {
 bool changeTwoQueen() {
     vector<vector<int> > pairs;
     vector<int> pair = generateTwoRowsEnableChange(pairs);
+    // cout << pair.size() << endl;
+    // cout << "pairs:" << pair[0] << " " << pair[1] << " " << pair[2] << endl;
     if(pair.size() == 0) {
         return false;
     } else {
@@ -242,14 +255,22 @@ bool changeTwoQueen() {
 }
 
 //随机的策略是，在选择下一步的时候，同时获取多个可能邻居，计算各自的概率值，随机从这些邻居中选择一个，生成一个随机数，看看这个随机数落在哪个邻居的范围内，比如p1是20,p2是30,则[1,20]是p1，[21,50]是p2，随机数的范围是[1,50]
+//如果那些邻居里面产生了一个冲突数为0的结果，直接使用这个，并结束
 bool changeTwoQueenWithRandom() {
-    vector<vector<int>> pairs;
+    vector<vector<int> > pairs;
     generateTwoRowsEnableChangePairs(pairs);
     if(pairs.size() == 0) {
         return false;
     }
-    int random = selectRandomFromPairs(pairs);
-    swap(pairs[0], pairs[1]);
+    int random;
+    //冲突数为0
+    if(pairs.size() == 1 && pairs[0][2] == 0) {
+        random = 0;
+    } else {
+        random = selectRandomFromPairs(pairs);
+    }
+    cout << "random " << pairs.size() << " " << random << endl;
+    swap(pairs[random][0], pairs[random][1]);
     return true;
 }
 
@@ -289,22 +310,30 @@ void queenSolution() {
 
 void queenSolutionAddRandomFactor() {
     bool flag = false;
-    srand((unsigned)time(NULL));
+    srand((unsigned)time(NULL)); //随机数种子必须放在这里，不能重复初始化，复杂会一直得到一样的随机数
+    // cout << "迭代过程:" << endl;
     while(1) {
+        // cout << "重新初始化:" << endl;
         initQueens();
-
+        // print(queens);
+        // cout << "冲突数变化：" << endl;
         while(1) {
+            // cout << countOfConflict() << endl;
+            //冲突数为0,成功找到
             if(0 == countOfConflict()) {
                 flag = true;
-                break;
+                break; 
             }
+
             if(!changeTwoQueenWithRandom()) {
                 break;
             }
         }
         if(flag == true) {
+            // print(queens);
             break;
         }
+        // cout << endl;
     }
 }
 
@@ -312,7 +341,10 @@ void queenSolutionAddRandomFactor() {
 int main() {
     // cin >> n;
     n = 8;
-    queenSolution();
+    // queenSolution();
+
+    queenSolutionAddRandomFactor();
     cout << "结果" << endl;
     print(queens);
+
 }

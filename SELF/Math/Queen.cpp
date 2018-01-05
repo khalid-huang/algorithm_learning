@@ -4,7 +4,7 @@
 using namespace std;
 
 //8皇后问题解决 
-int n = 8;
+int n = 12;
 vector<int> queen(n+1);
 vector<vector<int> > places;
 
