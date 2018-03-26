@@ -71,8 +71,8 @@ double calcuAdative(vector<int>& queen) {
 
 //初始化函数
 void init() {
-    // numOfGroup = 120;
-    numOfGroup = 4;
+    numOfGroup = 120;
+    // numOfGroup = 4;
     adaptive.clear();
     adaptive.resize(numOfGroup, 0);
     adaptValue.clear();
@@ -145,12 +145,12 @@ void genticCrossover() {
     }
 }
 
-//变异; 如果产生了5的倍数
+//变异; 如果产生了3的倍数
 void genticMutate() {
     int mutateSpot = 0;
     int groupSize = population.size();
     for(int i = 0; i < groupSize; i++) {
-        if(rand() % 5 == 0) {
+        if(rand() % 3 == 0) {
             mutateSpot = rand() % numOfQueen;
             population[i][mutateSpot] = rand() % numOfQueen;
         }
