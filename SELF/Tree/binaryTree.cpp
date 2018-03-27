@@ -148,9 +148,34 @@ void postOrderTraverse(BinaryTreeNode* root) {
 }
 
 
+/*
+    分层遍历二叉树；
+    思路是使用队列，每次都把当层的全部结点获取并打印
+*/
+void levelTraverse(BinaryTreeNode* root) {
+    if(root == NULL) return;
+    queue<BinaryTreeNode*> qbt;
+    qbt.push(root);
+    int curSize;
+    BinaryTreeNode* tmp;
+    while(!qbt.empty()) {
+        curSize = qbt.size(); //获取一整层的结点
+        for(int i = 0; i < curSize; i++) {
+            tmp = qbt.front();
+            qbt.pop();
+            if(tmp->left) qbt.push(qbt->left);
+            if(tmp->right) qbt.push(qbt->right);
+            cout << tmp->value << " ";
+        }
+        cout << end;
+    }
+}
+
+
 int main() {
     BinaryTreeNode* root = buildTree();
-
+    // int depth = getTreeDepthWithQueue(root);
+    // cout << "depth: " << depth << endl;
     // int count = countNodeNumberWithQueue(root);
     // cout << "nums: " << count << endl;
 
