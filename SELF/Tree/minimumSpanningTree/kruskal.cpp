@@ -29,10 +29,15 @@ int cmp(const Edge& a, const Edge& b) {
 
 //并查集查找根结点
 int unionsearch(int x) {
-  return (x == father[x]) ? x : unionsearch(father[x]);
+  return (x == father[x]) ? x : unionsearch(father[x]); //这里没有做路径压缩，要用回溯做的
+  //下面的做了路径压缩
+  // if(x != father[x]) {
+    // father[x] = unionsearch(father[x]);
+  // }
+  // return father[x];
 }
 
-//对两个点进行连接，同时进行路径压缩，压缩的策略是谁的儿子数多；
+//对两个点进行连接，同时进行路径压缩，在unionsearch里面
 bool join(int u, int v) {
   int fu = unionsearch(u);
   int fv = unionsearch(v);

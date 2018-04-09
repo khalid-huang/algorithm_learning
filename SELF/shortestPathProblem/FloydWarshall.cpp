@@ -33,6 +33,7 @@ void init() {
 }
 
 void FloydWarshall() {
+  //这一步表示使用k作为媒介点进行所有的顶点距离更新，所以要放最外层
   for(int k = 1; k <= vertexNum; k++) {
     for(int i = 1; i <= vertexNum; i++) {
       for(int j = 1; j <= vertexNum; j++) {
