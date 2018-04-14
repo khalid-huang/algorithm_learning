@@ -1,65 +1,68 @@
+//思想是利用逐层删除叶子的操作，删除到最后剩下的就是根了
+//https://leetcode.com/problems/minimum-height-trees/discuss/76104/C++-Solution.-O(n)-Time-O(n)-Space
+
+
 #include <iostream>
 #include <set>
 #include <vector>
 
 using namespace std;
 
-void bfs(vector<set<int> >& adjList, int point, int depth, vector<bool>& visited, int& rsl) {
-    visited[point] = true;
+struct Node {
+    set<int> neighbors;
+    bool isLeaf() {
+        return neighbors.size() == 1;
+    }
+};
 
-    int size =  adjList[point].size();
-    int next_point;
-    for(int i = 0; i < size; i++) {
-        next_point = adjList[point][i];
-        adjList[next_point].erase(point);
-        bfs(adjList, adjList[point][i], depth + 1, visited);
-        adjList[next_point].insert(point);
+vector<int> findMinHeightTrees(int n, vector<pair<int, int> >& edges) {
+    vector<int> buffer1;
+    vector<int> buffer2;
+    if(edges.size() == 1) {
+        buffer1.push_back(0);
+        return buffer1;
+    }
+    if(edges.size() == 2) {
+        buffer1.push_back(0);
+        buffer1.push_back(1);
+        return buffer1;
     }
 
-    //判断是否结束
-    int v_size = visited.size(), flag = 1;
-    for(int i = 0; i < v_size; i++) {
-        if(visited[i] == false) {
-            flag = 0;
-        }
+    //构建nodes数组
+    vector<Node> nodes = vector<Node>(n);
+    int edgesNum = edges.size();
+    for(int i = 0; i < edgesNum; i++) {
+        nodes[edges[i].first].neighbors.insert(edges[i].second);
+        nodes[edges[i].second].neighbors.insert(edges[i].first);
     }
 
-    if(flag == 1) {
-        rsl = rsl < depth ? rsl : depth;
-    }
-
-    visited[point] = false;
-}
-
-vector<int> findMinHeightTrees(int n , vector<pair<int, int> >& edges) {
-    //build adjacency list;
-    vector<set<int> > adjList(n);
-    int e_size = edges.size();
-    int p1, p2;
-    for(int i = 0 ; i < e_size; i++) {
-        p1 = edges[i].first;
-        p2 = edges[i].second;
-        adjList[p1].insert(p2);
-        adjList[p2].insert(p1);
-    }
-
-    vector<bool> visited(n, false);
-    int a_size, depth = 0, rsl = n;
+    vector<int>* leaves1 = &buffer1;
+    vector<int>* leaves2 = &buffer2;
+    //每层删除所有叶子结点和其边；也就是删除所有节点中包含叶子结点的部分（neighbor）
     for(int i = 0; i < n; i++) {
-        a_size = adjList[i].size();
-        visited[i] = true;
-        for(int j = 0; j < a_size; j++) {
-            next_point = adjList[j];
-            adjList[j].erase(i); //to avoid from j to i;
-            bfs(adjList, next_point, depth+1, visited, rsl);
-            adjList[j].insert(i);
+        if(nodes[i].isLeaf()) {
+            leaves1->push_back(i);
         }
-        visited[i] = false;
     }
-
+    while(1) {
+        for(int i : *leaves1) {
+            for(int j : nodes[i].neighbors) {
+                node[j].neighbors.erase(i);
+                //判断删除这个叶子之后是不是叶子结点
+                if(nodes[j].isLeaf()) {
+                    leaves2->push_back(j);
+                }
+            }
+        }
+        if(leaves2->empty()) {
+            return *leaves1; //这个就是结果了
+        }
+        leaves1->clear();//清空上层的叶子
+        swap(leaves1, leaves2);
+    }
 }
 
-int main() {
-    vector<set<int> > linkTable;
+int main() 
+    // vector<set<int> > linkTable;
 
 }

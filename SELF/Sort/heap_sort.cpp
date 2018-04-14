@@ -31,7 +31,7 @@ void heap_adjust(int* arr, int start, int size) {
 
 //从下而上遍历所有的非叶子结点就可以了
 void build_heap(int* arr, int size) {
-	for(int i = size / 2 - 2; i >= 0; i--) {
+	for(int i = size / 2 - 1; i >= 0; i--) {
 		heap_adjust(arr, i, size);
 	}
 }
@@ -42,7 +42,7 @@ void heap_sort(int* arr, int size)
 	build_heap(arr, size);
 	for(int i = size-1; i >= 0; i--) {
 		swap(arr[i], arr[0]);
-		heap_adjust(arr, 0, i-1);
+		heap_adjust(arr, 0, i); //
 	}
 }
 
@@ -74,11 +74,11 @@ int main()
 {
 	int arr[] = {1,5,2,5,6,3};
 	int size =  sizeof(arr) / sizeof(arr[0]);
-	//get_heap_sort(arr, size);
-	//print_arr(arr, size);
+	get_heap_sort(arr, size);
+	print_arr(arr, size);
 	//返回最4个最大的；
-	int k = 4;
-	int ans[k];
-	get_k_max_nums(arr, size, k ,ans);
-	print_arr(ans, k);
+	// int k = 4;
+	// int ans[k];
+	// get_k_max_nums(arr, size, k ,ans);
+	// print_arr(ans, k);
 }
